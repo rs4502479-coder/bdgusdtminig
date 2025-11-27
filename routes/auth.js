@@ -14,7 +14,9 @@ function genInvite() {
   return "INV-" + Math.random().toString(36).substr(2, 6).toUpperCase();
 }
 
-// ------------------- SIGNUP -----------------------
+// =============================================================
+// 🔥 SIGNUP — FULL PostgreSQL FIX
+// =============================================================
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, invite_code } = req.body;
@@ -22,41 +24,54 @@ router.post("/signup", async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ error: "email+password required" });
 
-    const [ex] = await db.query("SELECT id FROM users WHERE email = ?", [
-      email,
-    ]);
-    if (ex.length) return res.status(400).json({ error: "Email exists" });
+    // CHECK EMAIL
+    const { rows: exist } = await db.query(
+      "SELECT id FROM users WHERE email = $1",
+      [email]
+    );
+    if (exist.length)
+      return res.status(400).json({ error: "Email already exists" });
 
     const hash = await bcrypt.hash(password, 10);
 
+    // CHECK INVITER
     let inviter_id = null;
     if (invite_code) {
-      const [r] = await db.query("SELECT id FROM users WHERE invite_code = ?", [
-        invite_code,
-      ]);
-      if (r.length) inviter_id = r[0].id;
+      const { rows: inv } = await db.query(
+        "SELECT id FROM users WHERE invite_code = $1",
+        [invite_code]
+      );
+      if (inv.length) inviter_id = inv[0].id;
     }
 
+    // UNIQUE INVITE CODE
     let code = genInvite();
-    let [c] = await db.query("SELECT id FROM users WHERE invite_code = ?", [
-      code,
-    ]);
-    while (c.length) {
+    let check = await db.query(
+      "SELECT id FROM users WHERE invite_code = $1",
+      [code]
+    );
+
+    while (check.rows.length) {
       code = genInvite();
-      [c] = await db.query("SELECT id FROM users WHERE invite_code = ?", [
-        code,
-      ]);
+      check = await db.query(
+        "SELECT id FROM users WHERE invite_code = $1",
+        [code]
+      );
     }
 
-    const [ins] = await db.query(
-      "INSERT INTO users (name,email,password_hash,invite_code,inviter_id,balance) VALUES (?,?,?,?,?,?)",
+    // INSERT USER
+    const insertUser = await db.query(
+      `INSERT INTO users (name, email, password_hash, invite_code, inviter_id, balance)
+       VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`,
       [name, email, hash, code, inviter_id, NEW_USER_BONUS]
     );
 
-    const userId = ins.insertId;
+    const userId = insertUser.rows[0].id;
 
+    // SIGNUP BONUS
     await db.query(
-      "INSERT INTO transactions (transaction_id,user_id,type,amount,status,metadata) VALUES (?,?,?,?,?,?)",
+      `INSERT INTO transactions (transaction_id,user_id,type,amount,status,metadata)
+       VALUES ($1,$2,$3,$4,$5,$6)`,
       [
         "TX-" + uuidv4(),
         userId,
@@ -67,14 +82,16 @@ router.post("/signup", async (req, res) => {
       ]
     );
 
+    // REFERRAL BONUS
     if (inviter_id) {
-      await db.query("UPDATE users SET balance = balance + ? WHERE id = ?", [
-        REFERRAL_BONUS,
-        inviter_id,
-      ]);
+      await db.query(
+        "UPDATE users SET balance = balance + $1 WHERE id = $2",
+        [REFERRAL_BONUS, inviter_id]
+      );
 
       await db.query(
-        "INSERT INTO transactions (transaction_id,user_id,type,amount,status,metadata) VALUES (?,?,?,?,?,?)",
+        `INSERT INTO transactions (transaction_id,user_id,type,amount,status,metadata)
+         VALUES ($1,$2,$3,$4,$5,$6)`,
         [
           "TX-" + uuidv4(),
           inviter_id,
@@ -86,50 +103,45 @@ router.post("/signup", async (req, res) => {
       );
 
       await db.query(
-        "INSERT INTO invites (inviter_id, invitee_id) VALUES (?,?)",
+        `INSERT INTO invites (inviter_id, invitee_id) VALUES ($1,$2)`,
         [inviter_id, userId]
       );
     }
 
     const token = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "7d" });
 
-    res.json({ token, invite_code: code });
-  } catch (e) {
-    console.error(e);
+    res.json({ success: true, token, invite_code: code });
+  } catch (err) {
+    console.error("SIGNUP ERROR:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// ------------------- LOGIN (FULLY FIXED) -----------------------
+// =============================================================
+// 🔥 LOGIN — FULL PostgreSQL FIX
+// =============================================================
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password)
-      return res
-        .status(400)
-        .json({ success: false, message: "Email & password required" });
+    const { rows } = await db.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
 
-    const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
-
-    if (rows.length === 0)
+    if (!rows.length)
       return res
         .status(400)
         .json({ success: false, message: "Invalid credentials" });
 
     const user = rows[0];
 
-    // FIXED: use correct DB column
     const match = await bcrypt.compare(password, user.password_hash);
-
     if (!match)
       return res
         .status(400)
         .json({ success: false, message: "Invalid credentials" });
 
-    // FIXED: JWT_SECRET correctly used
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
 
     return res.json({
@@ -138,7 +150,7 @@ router.post("/login", async (req, res) => {
       token,
     });
   } catch (err) {
-    console.log("LOGIN ERROR:", err);
+    console.error("LOGIN ERROR:", err);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 });
