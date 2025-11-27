@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Withdraw - BDG USDT Mining</title>
+
+  <link rel="stylesheet" href="/assets/css/index.css" />
+  <link rel="stylesheet" href="/assets/css/nav.css" />
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(#6514df, #7904da);
+      color: white;
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+    }
+
+    .card {
+      max-width: 680px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .withdraw-box {
+      background: rgba(0, 0, 50, 0.45);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #e0e0ff;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-size: 15px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: #00bfff;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .info-box {
+      text-align: center;
+      font-size: 13px;
+      margin-top: 16px;
+      opacity: 0.8;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="card">
+    <h2>Withdraw Funds</h2>
+
+    <div class="withdraw-box">
+
+      <label>Wallet Address (USDT-TRC20)</label>
+      <input type="text" id="wallet" placeholder="Enter TRC20 wallet address">
+
+      <label>Withdraw Amount (USDT)</label>
+      <input type="number" id="amount" placeholder="Minimum 2 USDT" min="2">
+
+      <button class="submit-btn" onclick="submitWithdraw()">Submit Withdrawal</button>
+
+    </div>
+
+    <div class="info-box">
+      <p>⚠️ Minimum withdrawal: 2 USDT</p>
+      <p>⏳ Processing time: 24 HOURS</p>
+    </div>
+
+  </div>
+
+ <nav>
+    <a href="/index.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Home</div>
+    </a>
+
+    <a href="/task.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Task</div>
+    </a>
+
+    <a href="/team.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Team</div>
+    </a>
+
+    <a href="/vip.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">VIP</div>
+    </a>
+
+    <!-- Profile Link -->
+    <a href="/dashboard.html" id="accountLink" class="account-link" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Profile</div>
+    </a>
+
+  </nav>
+
+  <script>
+
+async function submitWithdraw() {
+
+  const wallet = document.getElementById("wallet").value.trim();
+  const amount = parseFloat(document.getElementById("amount").value.trim());
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Please login first.");
+    return window.location.href = "signup.html";
+  }
+
+  if (!wallet || !amount) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  if (amount < 2) {
+    alert("Minimum withdrawal is 2 USDT.");
+    return;
+  }
+
+  const res = await fetch("/api/withdraw/request", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ amount, wallet })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    alert("❌ " + data.message);
+    return;
+  }
+
+  alert(`✅ Withdrawal Request Submitted!
+  
+Amount: ${amount} USDT
+Wallet: ${wallet}
+
+Processing time: 24 HOURS`);
+}
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Task Claim</title>
+  <link rel="stylesheet" href="/assets/css/index.css">
+  <style>
+    body { background:#6514df; color:white; padding:20px; font-family:sans-serif; }
+    .card { background:rgba(0,0,50,0.45); border-radius:20px; padding:20px; max-width:650px; margin:auto; }
+    .btn { padding:12px 20px; background:#00d19a; border:none; border-radius:10px; font-size:18px; font-weight:bold; cursor:pointer; }
+    .btn:disabled { background:gray; cursor:not-allowed; }
+    .info-box { margin-top:20px; padding:15px; background:#003f57; border-radius:12px; }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center;">Daily Claim</h2>
+
+  <div class="card" id="taskBox">
+    Loading task information...
+  </div>
+
+  <script>
+    function headers() {
+      const token = localStorage.getItem("token");
+      return token ? { "Authorization": "Bearer " + token, "Content-Type": "application/json" } : null;
+    }
+
+    async function loadTask() {
+      const h = headers();
+      if (!h) {
+        alert("Login first!");
+        location.href="/signup.html";
+        return;
+      }
+
+      const res = await fetch("/api/tasks/status", { headers: h });
+      const data = await res.json();
+
+      const box = document.getElementById("taskBox");
+
+      if (!data.success || !data.activePlan) {
+        box.innerHTML = "<p>No active task found. Please purchase a task first.</p>";
+        return;
+      }
+
+      const plan = data.activePlan;
+
+      // SAFE FIX for NaN
+      const reward = Number(plan.daily_reward || 0);
+      const fixedReward = reward.toFixed(2);
+
+      const last = plan.last_claim ? plan.last_claim.split("T")[0] : "Never";
+      const today = new Date().toISOString().split("T")[0];
+      const canClaim = (last !== today);
+
+      box.innerHTML = `
+        <h3>Your Task Plan</h3>
+        <div class="info-box">
+          <p><strong>Plan Amount:</strong> $${plan.amount}</p>
+          <p><strong>Daily Reward:</strong> $${fixedReward}</p>
+          <p><strong>Last Claim:</strong> ${last}</p>
+        </div>
+        <br>
+        <button class="btn" id="claimBtn" ${canClaim ? "" : "disabled"}>
+          ${canClaim ? "Claim Reward" : "Already Claimed Today"}
+        </button>
+      `;
+
+      document.getElementById("claimBtn").onclick = () => doClaim();
+    }
+
+    async function doClaim() {
+      const h = headers();
+      const btn = document.getElementById("claimBtn");
+
+      btn.disabled = true;
+      btn.innerText = "Claiming...";
+
+      const res = await fetch("/api/tasks/claim", {
+        method:"POST",
+        headers: h
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.error || data.message || "Claim failed");
+        btn.disabled = false;
+        btn.innerText = "Claim Reward";
+        return;
+      }
+
+      alert("✅ Reward claimed: $" + data.reward);
+      loadTask();
+    }
+
+    loadTask();
+  </script>
+
+</body>
+</html>

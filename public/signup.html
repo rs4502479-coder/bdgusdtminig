@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Signup | BDG USDT Mining</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Correct CSS path -->
+  <link rel="stylesheet" href="assets/css/account.css" />
+
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+</head>
+
+<body>
+  <div class="signup-wrapper">
+    <div class="signup-card">
+      <div class="avatar">
+        <!-- Correct image path -->
+        <img src="/assets/images/avatar.png" alt="User Avatar" />
+      </div>
+
+      <h2>Create Account</h2>
+
+      <form id="signupForm">
+        <div class="form-group">
+          <input type="text"id="s_name" placeholder="Username" required />
+        </div>
+
+        <div class="form-group">
+          <input type="email" id="s_email" placeholder="Email" required />
+        </div>
+
+        <div class="form-group">
+          <input type="password" id="s_password" placeholder="Password" required />
+        </div>
+
+        <div class="form-group">
+          <input type="text" id="s_invite" placeholder="Invite Code" />
+        </div>
+
+        <button type="submit" id="btnSignup" class="btn btn-primary">Register</button>
+        <div id="s_msg" class="small"></div>
+      </form>
+
+      <p class="login-text">
+        Already have an account?
+        <a href="login.html" class="login-link">Login</a>
+      </p>
+    </div>
+  </div>
+  
+<script>
+  // Auto-fill invite code from URL
+  function autofillInvite() {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+
+    if (ref) {
+      const input = document.getElementById("s_invite");
+      if (input) input.value = ref;
+    }
+  }
+
+  // Run when page loads
+  document.addEventListener("DOMContentLoaded", autofillInvite);
+</script>
+
+
+
+  <!-- Correct JS path -->
+  <script src="/assets/js/user.js"></script>
+  <script src="/assets/app.js"></script>
+  
+</body>
+</html>

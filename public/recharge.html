@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recharge - BDG USDT Mining</title>
+  <link rel="stylesheet" href="/assets/css/index.css" />
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(#6514df 10%, #7904da 60%);
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+    }
+
+    .card {
+      max-width: 680px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    .token-list {
+      background: rgba(0,0,50,0.45);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .token-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(255,255,255,0.2);
+      padding: 10px 0;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .token-item:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .token-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .token-left img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .token-right {
+      font-size: 18px;
+    }
+
+    .recharge-box {
+      margin-top: 20px;
+      background: rgba(0,0,50,0.45);
+      border-radius: 12px;
+      padding: 16px;
+      display: none;
+      text-align: center;
+    }
+
+    .recharge-box img {
+      width: 160px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
+    .wallet {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .copy-btn {
+      background: #00bfff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 14px;
+      background: #00bfff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2 style="text-align:center;">Recharge</h2>
+    <div class="token-list" id="tokenList">
+      <div class="token-item" data-token="BEP20-USDT">
+        <div class="token-left">
+          <img src="/assets/images/bep20.png" alt="BEP20-USDT">
+          <span>BEP20-USDT</span>
+        </div>
+        <div class="token-right">›</div>
+      </div>
+
+      <div class="token-item" data-token="TRC20-USDT">
+        <div class="token-left">
+          <img src="/assets/images/trc20.png" alt="TRC20-USDT">
+          <span>TRC20-USDT</span>
+        </div>
+        <div class="token-right">›</div>
+      </div>
+
+      <div class="token-item" data-token="ECR20-USDT">
+        <div class="token-left">
+          <img src="/assets/images/ecr20.png" alt="ECR20-USDT">
+          <span>ECR20-USDT</span>
+        </div>
+        <div class="token-right">›</div>
+      </div>
+
+      <!-- <div class="token-item" data-token="ETH">
+        <div class="token-left">
+          <img src="/assets/images/eth.png" alt="ETH">
+          <span>ETH</span>
+        </div>
+        <div class="token-right">›</div>
+      </div> -->
+
+      <div class="token-item" data-token="POLYGON">
+        <div class="token-left">
+          <img src="/assets/images/polygon.png" alt="POLYGON">
+          <span>POLYGON</span>
+        </div>
+        <div class="token-right">›</div>
+      </div>
+    </div>
+
+    <div class="recharge-box" id="rechargeBox">
+      <h3 id="selectedToken"></h3>
+      <img id="qrImage" src="" alt="QR Code">
+      <div class="wallet">
+        <span id="walletAddress">YourWalletHere</span>
+        <button class="copy-btn" onclick="copyAddress()">Copy</button>
+      </div>
+      <input type="text" id="txid" placeholder="Enter Transaction ID (TxHash)" />
+      <button class="submit-btn" onclick="submitRecharge()">Submit</button>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div>Home</div>
+    </a>
+    <a href="task.html">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div>Task</div>
+    </a>
+    <a href="team.html">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div>Team</div>
+    </a>
+    <a href="vip.html">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div>VIP</div>
+    </a>
+    <a href="dashboard.html">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div>Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    const tokens = {
+      "BEP20-USDT": { address: "0xE25ed9A960efD069745a70CDb4012AE1FD5229f7", qr: "walletbep20.png" },
+      "TRC20-USDT": { address: "THUmeBC51kHCHQdtnFVbwawkURRbrYsD3m", qr: "wallettcr20.png" },
+      "ECR20-USDT": { address: "0xE25ed9A960efD069745a70CDb4012AE1FD5229f7", qr: "walletecr20.png" },
+      // "ETH": { address: "0xYourETHAddressHere", qr: "b9b3de64-9c12-47c2-8337-229e034a4fb7.jpg" },
+      "POLYGON": { address: "0xE25ed9A960efD069745a70CDb4012AE1FD5229f7", qr: "walletpolygon.png" },
+    };
+
+    const rechargeBox = document.getElementById("rechargeBox");
+    const selectedToken = document.getElementById("selectedToken");
+    const walletAddress = document.getElementById("walletAddress");
+    const qrImage = document.getElementById("qrImage");
+
+    document.querySelectorAll(".token-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const token = item.dataset.token;
+        selectedToken.textContent = token;
+        walletAddress.textContent = tokens[token].address;
+        qrImage.src = "assets/images/" + tokens[token].qr;
+        rechargeBox.style.display = "block";
+        rechargeBox.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    function copyAddress() {
+      navigator.clipboard.writeText(walletAddress.textContent);
+      alert("Address copied!");
+    }
+
+    function submitRecharge() {
+      const txid = document.getElementById("txid").value.trim();
+      if (!txid) {
+        alert("Please enter your Transaction ID.");
+        return;
+      }
+      alert("Transaction ID submitted successfully!");
+    }
+  </script>
+</body>
+</html>

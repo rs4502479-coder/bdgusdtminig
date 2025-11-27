@@ -1,0 +1,269 @@
+<!-- <!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body class="container">
+  <h2>Admin Panel (simple)</h2>
+  <p>To use admin, login normally then set token in localStorage as an admin token. (For demo create a token that has isAdmin true.)</p>
+  <div class='card'>
+    <button id='listUsers'>List Users</button>
+    <input id='txid' placeholder='Transaction ID to confirm'>
+    <select id='txstatus'><option value='confirmed'>confirmed</option><option value='failed'>failed</option></select>
+    <button id='confirmTx'>Confirm Tx</button>
+    <pre id='out'></pre>
+  </div>
+  <script>
+    document.getElementById('listUsers').onclick = async ()=>{
+      const token = localStorage.getItem('token');
+      const r = await fetch('/api/admin/users',{headers:{'Authorization':'Bearer '+token}});
+      document.getElementById('out').innerText = JSON.stringify(await r.json(),null,2);
+    };
+    document.getElementById('confirmTx').onclick = async ()=>{
+      const txid = document.getElementById('txid').value;
+      const status = document.getElementById('txstatus').value;
+      const token = localStorage.getItem('token');
+      const r = await fetch('/api/admin/transaction/confirm',{method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body: JSON.stringify({transaction_id:txid, status})});
+      document.getElementById('out').innerText = JSON.stringify(await r.json(),null,2);
+    };
+  </script>
+</body>
+</html>
+
+
+
+
+
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin Dashboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        padding: 20px;
+    }
+    h2 {
+        margin-top: 40px;
+        color: #333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        margin-top: 10px;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 0 10px #0001;
+    }
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background: #333;
+        color: white;
+    }
+    button {
+        padding: 6px 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    .approve { background: #28a745; color: white; }
+    .reject { background: #dc3545; color: white; }
+    .promote { background: #007bff; color: white; }
+</style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<!-- USERS LIST -->
+<h2>All Users</h2>
+<table id="usersTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Invite Code</th>
+            <th>Inviter</th>
+            <th>Level</th>
+            <th>Balance</th>
+            <th>Admin?</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+
+<!-- WITHDRAW REQUEST LIST -->
+<h2>Pending Withdraw Requests</h2>
+<table id="withdrawTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+// Base API URL
+const API = "https://yourdomain.com/api/admin";   // change to your backend URL
+const token = localStorage.getItem("token");
+
+if (!token) alert("Admin token missing! Login first.");
+
+
+/* =======================================================
+   LOAD USERS
+======================================================= */
+async function loadUsers() {
+    const res = await fetch(API + "/users", {
+        headers: { Authorization: token }
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        alert("Failed to load users");
+        return;
+    }
+
+    let html = "";
+    data.users.forEach(u => {
+        html += `
+            <tr>
+                <td>${u.id}</td>
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td>${u.invite_code}</td>
+                <td>${u.inviter_id ?? "-"}</td>
+                <td>${u.level}</td>
+                <td>$${u.balance}</td>
+                <td>${u.is_admin ? "Yes" : "No"}</td>
+                <td>
+                    <button class="promote" onclick="promoteUser(${u.id}, ${u.is_admin ? 0 : 1})">
+                        ${u.is_admin ? "Remove Admin" : "Make Admin"}
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    document.querySelector("#usersTable tbody").innerHTML = html;
+}
+
+
+/* =======================================================
+   PROMOTE USER
+======================================================= */
+async function promoteUser(id, isAdmin) {
+    const res = await fetch(API + `/user/${id}/promote`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+        },
+        body: JSON.stringify({ isAdmin })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+    loadUsers();
+}
+
+
+/* =======================================================
+   LOAD PENDING WITHDRAW REQUESTS
+======================================================= */
+async function loadWithdraw() {
+    const res = await fetch(API + "/withdraw/pending", {
+        headers: { Authorization: token }
+    });
+
+    const data = await res.json();
+
+    let html = "";
+
+    data.data.forEach(w => {
+        html += `
+            <tr>
+                <td>${w.id}</td>
+                <td>${w.user_id}</td>
+                <td>$${w.amount}</td>
+                <td>${w.status}</td>
+                <td>${w.created_at}</td>
+                <td>
+                    <button class="approve" onclick="approveWithdraw(${w.id})">Approve</button>
+                    <button class="reject" onclick="rejectWithdraw(${w.id})">Reject</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    document.querySelector("#withdrawTable tbody").innerHTML = html;
+}
+
+
+/* =======================================================
+   APPROVE WITHDRAW
+======================================================= */
+async function approveWithdraw(id) {
+    const res = await fetch(API + "/withdraw/approve", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+        },
+        body: JSON.stringify({ id })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+    loadWithdraw();
+}
+
+
+/* =======================================================
+   REJECT WITHDRAW
+======================================================= */
+async function rejectWithdraw(id) {
+    const res = await fetch(API + "/withdraw/reject", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+        },
+        body: JSON.stringify({ id })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+    loadWithdraw();
+}
+
+
+// Auto Load Data
+loadUsers();
+loadWithdraw();
+
+</script>
+
+</body>
+</html>

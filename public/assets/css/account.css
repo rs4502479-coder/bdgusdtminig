@@ -1,0 +1,251 @@
+:root {
+    --primary: #04879C;
+    --bg1: #342056;
+    --bg2: #5454C5;
+    --bg3: #639CD9;
+    --accent: #5F85DB;
+    --muted: #aaa;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ✅ Center wrapper for responsiveness */
+.signup-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Glass card */
+.signup-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 30px 26px;
+    box-shadow: 0 8px 25px rgba(2, 6, 23, 0.6);
+    backdrop-filter: blur(8px);
+    text-align: center;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+/* Avatar */
+.signup-card .avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 16px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.signup-card .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.signup-card h2 {
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: 0.25s;
+}
+
+.form-group input::placeholder {
+    color: #ccc;
+}
+
+.form-group input:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Button */
+.btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--bg3));
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Login text */
+.login-text {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 16px;
+}
+
+.login-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* ✅ Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ✅ RESPONSIVE DESIGN */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .signup-card {
+        width: 100%;
+        padding: 24px 20px;
+        border-radius: 12px;
+    }
+
+    .signup-card .avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .signup-card h2 {
+        font-size: 20px;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .login-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .signup-card {
+        padding: 20px 16px;
+    }
+
+    .signup-card h2 {
+        font-size: 18px;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+    }
+} 
+
+  /* Default — works on both desktop & mobile */
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 680px;
+  background: linear-gradient(to right, #4a00e0, #8e2de2);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 999;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Nav items */
+nav a {
+  flex: 1;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+nav a span {
+  display: block;
+}
+
+nav a:hover {
+  color: #ffd700;
+  transform: scale(1.1);
+}
+
+nav a.active {
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* 🔹 Responsive adjustments */
+@media (max-width: 768px) {
+  nav {
+    max-width: 100%;
+    border-radius: 0;
+    bottom: 0;
+    transform: none;
+    left: 0;
+    font-size: 12px;
+  }
+}

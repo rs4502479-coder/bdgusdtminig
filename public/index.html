@@ -1,0 +1,484 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BDG USDT Mining</title>
+  <link rel="icon" type="image/x-icon" href="/assets/images/logo.ico" />
+  <link rel="stylesheet" href="/assets/css/index.css" />
+  <link rel="stylesheet" href="/assets/css/nav.css" />
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+
+</head>
+
+<body>
+
+  <div class="card" role="main" style="
+        max-width: 680px;
+        border-radius: 0;
+        background: linear-gradient(#6514df 10%, #7904da 60%);
+        box-shadow: none;
+      ">
+    <header style="
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        ">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <div class="logo" style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background-image: url(/assets/images/ico.jpg);
+            "></div>
+        <div style="font-weight: bold; font-size: larger" data-key="title">
+          BDG USDT Mining
+        </div>
+      </div>
+
+      <select id="langSwitcher" class="btn btn-ghost" style="font-size: 12px; padding: 6px 10px; background: #000">
+        <option value="en">English</option>
+        <option value="ru">Russian</option>
+        <option value="hi">Hindi</option>
+      </select>
+    </header>
+
+    <div style="padding: 12px">
+      <div class="ticker">
+        <div class="icon">
+          <span class="iconify" data-icon="basil:bullhorn-outline" style="font-size: 20px; color: white">
+          </span>
+        </div>
+        <div class="ticker-viewport" id="tickerViewport">
+          <div class="ticker-track" id="tickerTrack"></div>
+        </div>
+      </div>
+
+      <!-- Banner Slider -->
+      <div class="banner-box">
+        <img id="bannerImg" src="https://watcher.guru/news/wp-content/uploads/2023/05/stablecoin-tether-usdt.jpg"
+          alt="banner" />
+      </div>
+      <div style="
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 12px;
+          ">
+        <div>
+          <a href="/recharge.html" class="account-link">
+            <div>
+              <img src="/assets/images/recharge.png" alt="Recharge" width="60px" />
+            </div>
+          </a><span data-key="recharge">Recharge</span>
+        </div>
+        <div>
+          <a href="/withdraw.html" class="account-link">
+            <div>
+              <img src="/assets/images/withdraw.png" alt="Withdraw" width="60px" />
+            </div>
+          </a><span data-key="withdraw">Withdraw</span>
+        </div>
+        <div>
+          <a href="/app.html" class="account-link">
+            <div><img src="/assets/images/app.png" alt="App" width="60px" /></div>
+          </a><span data-key="app">App</span>
+        </div>
+        <div>
+          <a href="/company.html" class="account-link">
+            <div>
+              <img src="/assets/images/company.png" alt="Company" width="60px" />
+            </div>
+          </a><span data-key="company">Company</span>
+        </div>
+        <div>
+          <a href="/invite.html" class="account-link">
+            <div>
+              <img src="/assets/images/withdraw.png" alt="Invite" width="60px" />
+            </div>
+          </a><span data-key="invite">Invite</span>
+        </div>
+        <div>
+          <a href="/agency.html" class="account-link">
+            <div>
+              <img src="/assets/images/Company.png" alt="Agency" width="60px" />
+            </div>
+          </a><span data-key="agency">Agency</span>
+        </div>
+
+        <div>
+          <a href="#" id="accountLink" class="account-link">
+            <div><img src="/assets/images/account.png" alt="account" width="50px" /></div>
+          </a>
+          <span data-key="account">Account</span>
+        </div>
+
+        <script>
+          // 👇 Auto redirect based on login status
+          document.getElementById("accountLink").addEventListener("click", e => {
+            e.preventDefault();
+            const token = localStorage.getItem("token");
+            if (token) {
+              window.location.href = "/dashboard.html"; // Logged in → profile
+            } else {
+              window.location.href = "/signup.html";  // Not logged in → signup/login
+            }
+          });
+        </script>
+
+      </div>
+
+      <button class="btn btn-ghost" style="margin: 6px 0; display: flex; align-items: center; gap: 6px">
+        <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular"
+          style="font-size: 30px; color: white"></span>
+        <span data-key="taskHall" style="color: white; font-size: medium">Task Hall</span>
+      </button>
+
+      <div id="plans"></div>
+
+      <button class="btn btn-ghost" style="width: 100%; margin: 14px 0;border-color: white;color:white;">
+        👤<span data-key="memberList"> Member list</span>
+      </button>
+
+      <div id="mlist"></div>
+
+      <button class="btn btn-ghost" style="width: 100%; margin: 14px 0;border-color: white;color:white;">
+        🏛️<span data-key="regulatory">Regulatory Authority</span>
+      </button>
+      <div style="
+            background: rgba(0, 0, 0, 0.25);
+            height: 80px;
+            border-radius: 12px;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            
+          ">
+        <p style="padding: 20px;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          "> © 2025 BDG USDT Mining
+          <br>All rights reserved
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+ <script>
+/* -------------------------
+   GET TOKEN HEADERS
+--------------------------- */
+async function getHeaders() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  return {
+    "Authorization": "Bearer " + token,
+    "Content-Type": "application/json"
+  };
+}
+
+/* -------------------------
+   FETCH USER BALANCE (REAL)
+--------------------------- */
+async function fetchRealBalance() {
+  const headers = await getHeaders();
+  if (!headers) return 0;
+
+  try {
+    const res = await fetch("/api/user/balance", { headers });
+    const data = await res.json();
+
+    if (data.success) {
+      return parseFloat(data.balance);
+    } else {
+      console.warn("Balance fetch failed", data);
+      return 0;
+    }
+  } catch (e) {
+    console.error("Balance error:", e);
+    return 0;
+  }
+}
+
+/* -------------------------
+   FETCH ACTIVE PLAN
+--------------------------- */
+async function fetchActivePlan() {
+  const headers = await getHeaders();
+  if (!headers) return null;
+
+  try {
+    const res = await fetch("/api/tasks/status", { headers });
+    const data = await res.json();
+
+    if (data.success) {
+      return data.activePlan; // { amount: 25, last_claim: '2025-01-02' }
+    }
+
+    return null;
+  } catch (e) {
+    console.error("Plan error:", e);
+    return null;
+  }
+}
+
+/* -------------------------
+   PLANS LIST
+--------------------------- */
+const tiers = [
+  { amount: 25, name: "New Energy 1" },
+  { amount: 100, name: "New Energy 2" },
+  { amount: 300, name: "New Energy 3" },
+  { amount: 720, name: "New Energy 4" },
+  { amount: 1750, name: "New Energy 5" },
+  { amount: 4080, name: "New Energy 6" },
+  { amount: 10000, name: "New Energy 7" },
+  { amount: 25000, name: "New Energy 8" },
+  { amount: 65000, name: "New Energy 9" },
+  { amount: 115000, name: "New Energy 10" }
+];
+
+/* -------------------------
+   RENDER PLANS → BUY / CLAIM
+--------------------------- */
+async function loadPlans() {
+
+  const plansDiv = document.getElementById("plans");
+  plansDiv.innerHTML = "";
+
+  const balance = await fetchRealBalance();
+  const activePlan = await fetchActivePlan();
+
+  tiers.forEach(tier => {
+    const isUnlocked = balance >= tier.amount;
+    const isActivePlan = activePlan && activePlan.amount == tier.amount;
+
+    // UI CARD
+    const div = document.createElement("div");
+    div.style = `
+      background: rgba(0,0,50,0.45);
+      border-radius: 20px;
+      margin: 10px 0;
+      padding: 14px;
+      color:white;
+    `;
+
+    let buttonHTML = "";
+
+    /* -------------------------
+       USER HAS THIS PLAN (ACTIVE)
+       SHOW CLAIM BUTTON
+    ---------------------------- */
+    if (isActivePlan) {
+      buttonHTML = `
+        <button 
+          onclick="window.location.href='/task-run.html'"
+          style="
+            margin-top:10px;
+            width:100%;
+            padding:10px;
+            border-radius:12px;
+            background:#00d19a;
+            color:black;
+            font-weight:bold;
+            border:none;
+            cursor:pointer;
+          ">
+          🔥 Claim Daily Reward
+        </button>
+      `;
+    }
+
+    /* -------------------------
+       USER HAS ENOUGH BALANCE 
+       BUT NOT PURCHASED → BUY BUTTON
+    ---------------------------- */
+    else if (isUnlocked) {
+      buttonHTML = `
+        <button 
+          onclick="window.location.href='/task.html?plan=${tier.amount}'"
+          style="
+            margin-top:10px;
+            width:100%;
+            padding:10px;
+            border-radius:12px;
+            background:#ffd700;
+            color:black;
+            font-weight:bold;
+            border:none;
+            cursor:pointer;
+          ">
+          Buy Now
+        </button>
+      `;
+    }
+
+    /* -------------------------
+       USER DOESN'T HAVE BALANCE
+       SHOW LOCKED
+    ---------------------------- */
+    else {
+      buttonHTML = `
+        <button 
+          onclick="alert('You need $${tier.amount} to unlock this plan.')"
+          style="
+            margin-top:10px;
+            width:100%;
+            padding:10px;
+            border-radius:12px;
+            background:gray;
+            color:black;
+            font-weight:bold;
+            border:none;
+            cursor:not-allowed;
+          ">
+          Locked 🔒
+        </button>
+      `;
+    }
+
+    // FINAL CARD HTML
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:12px;color:#8bbcff;">Unlock $${tier.amount}</div>
+          <div style="font-size:16px;">${tier.name}</div>
+        </div>
+        <div style="font-size:26px;">${isUnlocked ? "🔓" : "🔒"}</div>
+      </div>
+      ${buttonHTML}
+    `;
+
+    plansDiv.appendChild(div);
+  });
+
+}
+
+loadPlans();
+
+  // Full big members list
+const members = [
+  ["jv*****@hotmail.com", "New Energy 9", "+$5,726.00"],
+  ["uk*****@hotmail.com", "New Energy 1", "+$6.00"],
+  ["cv****@gmail.com", "New Energy 9", "+$125,000.00"],
+  ["mk*****@gmail.com", "New Energy 4", "+$2,400.00"],
+  ["sa*****@yahoo.com", "New Energy 3", "+$860.00"],
+  ["ro*****@hotmail.com", "New Energy 8", "+$12,540.00"],
+  ["ki*****@gmail.com", "New Energy 5", "+$9,150.00"],
+  ["ha*****@gmail.com", "New Energy 2", "+$75.00"],
+];
+
+// Shuffle function
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+const ml = document.getElementById("mlist");
+
+// Main render function (ONLY 3 random)
+function render() {
+  ml.innerHTML = "";
+  shuffle(members);
+  const show3 = members.slice(0, 3); // pick only 3 users
+
+  show3.forEach((m) => {
+    const row = document.createElement("div");
+    row.style = `
+      background: rgba(0,0,50,0.45);
+      border-radius: 20px;
+      margin: 8px 0;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all .5s ease;
+    `;
+    row.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="
+          width:32px;height:32px;border-radius:50%;
+          background:#ffd700;display:flex;align-items:center;
+          justify-content:center;font-weight:700;
+        ">👑</div>
+        <div>
+          <div style="font-size:13px">${m[0]}</div>
+          <div style="
+            font-size:11px;background:#ffb700;padding:2px 6px;
+            border-radius:6px;color:#000;margin-top:2px;
+          ">${m[1]}</div>
+        </div>
+      </div>
+      <div style="font-weight:700">${m[2]}</div>
+    `;
+
+    ml.appendChild(row);
+
+    // small animation delay
+    setTimeout(() => {
+      row.style.opacity = "1";
+      row.style.transform = "translateY(0)";
+    }, 50);
+  });
+}
+
+// First load
+render();
+
+// Change every 3 seconds
+setInterval(() => {
+  render();
+}, 3000);
+
+</script>
+
+
+  <script src="/assets/js/lang.js"></script>
+  <script src="/assets/js/head.js"></script>
+  <script src="/assets/js/image.js"></script>
+
+
+  </div>
+  <nav>
+    <a href="/index.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Home</div>
+    </a>
+
+    <a href="/task.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Task</div>
+    </a>
+
+    <a href="/team.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Team</div>
+    </a>
+
+    <a href="/vip.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">VIP</div>
+    </a>
+
+    <!-- Profile Link -->
+    <a href="/dashboard.html" id="accountLink" class="account-link" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Profile</div>
+    </a>
+
+  </nav>
+</body>
+
+</html>

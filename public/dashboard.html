@@ -1,0 +1,318 @@
+<!-- <!-- <!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body class="container">
+  <header><h2>Dashboard</h2><a href="/">Back</a></header>
+  <div id="content"></div>
+  <script src="/assets/app.js"></script>
+  <script>
+    (async ()=>{
+      const token = localStorage.getItem('token');
+      const content = document.getElementById('content');
+      if (!token) { content.innerHTML = '<p>Please login on <a href="/">home</a></p>'; return; }
+      // fetch user basic info
+      try {
+        // simple: show actions
+        content.innerHTML = `
+          <div class='card'>
+            <button id='daily'>Complete Daily Task</button>
+            <button id='recharge'>Create Recharge (test)</button>
+            <button id='withdraw'>Create Withdraw (test)</button>
+            <pre id='out'></pre>
+          </div>
+        `;
+        document.getElementById('daily').onclick = async ()=>{
+          const r = await fetch('/api/tasks/complete',{method:'POST', headers:{'Authorization': 'Bearer '+token}});
+          document.getElementById('out').innerText = JSON.stringify(await r.json(),null,2);
+        };
+        document.getElementById('recharge').onclick = async ()=>{
+          const a = prompt('Amount to recharge (test)');
+          const r = await fetch('/api/transactions/recharge',{method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body: JSON.stringify({amount: parseFloat(a)})});
+          document.getElementById('out').innerText = JSON.stringify(await r.json(),null,2);
+        };
+        document.getElementById('withdraw').onclick = async ()=>{
+          const a = prompt('Amount to withdraw (test)');
+          const r = await fetch('/api/transactions/withdraw',{method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body: JSON.stringify({amount: parseFloat(a)})});
+          document.getElementById('out').innerText = JSON.stringify(await r.json(),null,2);
+        };
+      } catch(e) { content.innerText = 'Error'; }
+    })();
+  </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - BDG USDT Mining</title>
+    <link rel="stylesheet" href="/assets/css/index.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/nav.css" /> -->
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  </head>
+
+  <body>
+    <div
+      class="card"
+      style="
+        max-width: 680px;
+        border-radius: 0;
+        background: linear-gradient(#6514df, #7904da);
+        min-height: 100vh;
+      "
+    >
+      <!-- Header -->
+      <header
+        style="
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        "
+      >
+        <div style="display: flex; align-items: center; gap: 8px">
+          <div
+            class="logo"
+            style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background-image: url(/assets/images/ico.jpg);
+              background-size: cover;
+              background-position: center;
+            "
+          ></div>
+          <div style="font-weight: bold; font-size: larger">
+            BDG USDT Mining
+          </div>
+        </div>
+      </header>
+
+      <!-- Profile Info -->
+      <main style="padding: 20px; text-align: center; color: white">
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+          "
+        >
+          <img
+            id="profileAvatar"
+            src="/assets/images/avatar.png"
+            alt="Avatar"
+            style="
+              width: 90px;
+              height: 90px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 3px solid white;
+              margin-bottom: 10px;
+            "
+          />
+
+          <h2 id="userName" style="margin-bottom: 4px">Loading...</h2>
+          <div
+            id="userLevel"
+            style="font-size: 14px; color: #ffd700; margin-bottom: 12px"
+          >
+            Level: --
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 50, 0.45);
+              padding: 14px;
+              border-radius: 12px;
+              margin-bottom: 12px;
+            "
+          >
+            <div style="font-size: 13px; opacity: 0.8">Balance</div>
+            <div id="userBalance" style="font-size: 28px; font-weight: 700">
+              0.00 USDT
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              gap: 10px;
+              margin-bottom: 12px;
+            "
+          >
+            <a href="/recharge.html" class="btn btn-primary">Recharge</a>
+            <a href="/withdraw.html" class="btn btn-ghost">Withdraw</a>
+          </div>
+        </div>
+
+        <!-- Transaction Information -->
+        <section style="margin-top: 20px; text-align: left">
+          <h3 style="margin-bottom: 8px">Recent Transactions</h3>
+
+          <div
+            id="lastDeposit"
+            style="
+              background: rgba(0, 0, 50, 0.45);
+              padding: 14px;
+              border-radius: 12px;
+              margin-bottom: 10px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  class="iconify"
+                  data-icon="mdi:cash-plus"
+                  style="font-size: 24px; color: #00ff99"
+                ></span>
+                <div>
+                  <div style="font-weight: 600">Last Deposit</div>
+                  <div id="depositDate" style="font-size: 12px; opacity: 0.8">
+                    --
+                  </div>
+                </div>
+              </div>
+              <div id="depositAmount" style="font-weight: 700">$0.00</div>
+            </div>
+          </div>
+
+          <div
+            id="lastWithdraw"
+            style="
+              background: rgba(0, 0, 50, 0.45);
+              padding: 14px;
+              border-radius: 12px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  class="iconify"
+                  data-icon="mdi:cash-minus"
+                  style="font-size: 24px; color: #ff7777"
+                ></span>
+                <div>
+                  <div style="font-weight: 600">Last Withdrawal</div>
+                  <div id="withdrawDate" style="font-size: 12px; opacity: 0.8">
+                    --
+                  </div>
+                </div>
+              </div>
+              <div id="withdrawAmount" style="font-weight: 700">$0.00</div>
+            </div>
+          </div>
+        </section>
+
+        <button id="logoutBtn" class="btn btn-ghost" style="margin-top: 20px">
+          🚪 Logout
+        </button>
+      </main>
+    </div>
+
+    <!-- JS: Fetch live user data -->
+    <script>
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "signup.html"; // no token → redirect to login
+      }
+
+      // Load user profile
+      fetch("/api/user/profile", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.success) {
+            alert("Session expired. Login again.");
+            return (window.location.href = "signup.html");
+          }
+
+          // Fill page
+          document.getElementById("userName").innerText = data.user.name;
+          document.getElementById("userBalance").innerText =
+            data.user.balance.toFixed(2) + " USDT";
+          document.getElementById("userLevel").innerText =
+            "Level: " + data.user.level;
+
+          if (data.transactions) {
+            document.getElementById("depositAmount").innerText =
+              "$" + data.transactions.lastDeposit.amount;
+            document.getElementById("depositDate").innerText =
+              data.transactions.lastDeposit.date;
+
+            document.getElementById("withdrawAmount").innerText =
+              "$" + data.transactions.lastWithdraw.amount;
+            document.getElementById("withdrawDate").innerText =
+              data.transactions.lastWithdraw.date;
+          }
+        })
+        .catch((err) => console.error("Error:", err));
+
+      // Logout
+      document.getElementById("logoutBtn").onclick = () => {
+        localStorage.removeItem("token");
+        window.location.href = "signup.html";
+      };
+    </script>
+
+    <!-- Bottom Nav -->
+    <nav>
+    <a href="/index.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Home</div>
+    </a>
+
+    <a href="/task.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Task</div>
+    </a>
+
+    <a href="/team.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Team</div>
+    </a>
+
+    <a href="/vip.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">VIP</div>
+    </a>
+
+    <!-- Profile Link -->
+    <a href="/dashboard.html" id="accountLink" class="account-link" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Profile</div>
+    </a>
+
+  </nav>
+
+    <script>
+      document.getElementById("accountLink").onclick = () => {
+        if (localStorage.getItem("token"))
+          window.location.href = "dashboard.html";
+        else window.location.href = "signup.html";
+      };
+    </script>
+    <script src="/assets/js/fauth.js"></script>
+  </body>
+</html>

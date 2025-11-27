@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VIP Levels - BDG USDT Mining</title>
+
+  <link rel="stylesheet" href="/assets/css/index.css" />
+  <link rel="stylesheet" href="/assets/css/nav.css" />
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(#6514df, #7904da);
+      margin: 0;
+      color: white;
+      font-family: "Inter", sans-serif;
+    }
+
+    .vip-box {
+      background: rgba(255,255,255,0.1);
+      padding: 14px;
+      border-radius: 14px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div style="max-width:680px;margin:auto;padding:16px;">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="logo" style="width:40px;height:40px;border-radius:50%;background-image:url(/assets/images/ico.jpg);background-size:cover;"></div>
+      <div style="font-weight:bold;font-size:larger;">BDG USDT Mining</div>
+    </div>
+    <div style="font-weight:bold;font-size:larger;text-align:center">VIP Levels</div>
+    <div id="vipList" style="margin-top:20px;"></div>
+  </div>
+
+
+<script>
+const vipLevels = [
+  { name: "VIP 1", min: 25, reward: 2 },
+  { name: "VIP 2", min: 100, reward: 2 },
+  { name: "VIP 3", min: 300, reward: 2 },
+  { name: "VIP 4", min: 720, reward: 2 },
+  { name: "VIP 5", min: 1750, reward: 2 },
+  { name: "VIP 6", min: 4080, reward: 2 },
+  { name: "VIP 7", min: 10000, reward: 2 },
+  { name: "VIP 8", min: 25000, reward: 2 },
+  { name: "VIP 9", min: 65000, reward: 2 },
+  { name: "VIP 10", min: 115000, reward: 2 }
+];
+
+async function loadVIP() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return window.location.href = "/signup.html";
+  }
+
+  const res = await fetch("/api/user/balance", {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  const data = await res.json();
+  const balance = data.success ? data.balance : 0;
+
+  const list = document.getElementById("vipList");
+
+  list.innerHTML = vipLevels.map(v => `
+    <div class="vip-box" style="opacity:${balance >= v.min ? 1 : 0.5}">
+      <div>
+        <strong>${v.name}</strong><br>
+        <small>Minimum: $${v.min}</small>
+      </div>
+
+      <div>
+        ${balance >= v.min ? "✅" : "🔒"}  
+        <span style="font-weight:bold;">${v.reward}%/day</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+loadVIP();
+</script>
+
+
+<!-- bottom nav -->
+<nav>
+    <a href="/index.html">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div>Home</div>
+    </a>
+
+    <a href="/task.html">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div>Task</div>
+    </a>
+
+    <a href="/team.html">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div>Team</div>
+    </a>
+
+    <a href="/vip.html">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div>VIP</div>
+    </a>
+
+    <a href="#" id="accountLink">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div>Profile</div>
+    </a>
+</nav>
+
+
+<script>
+document.getElementById("accountLink").addEventListener("click", function () {
+  const token = localStorage.getItem("token");
+  if (token) window.location.href = "/dashboard.html";
+  else window.location.href = "/signup.html";
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 10px;
+}
+input,
+button,
+select {
+  padding: 8px;
+  margin: 6px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.container {
+  background: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* nav a{margin-right:10px}
+.card{border:1px solid #eee;padding:10px;margin:10px 0}
+.small{font-size:0.9rem;color:#666} */
+
+/* simple responsive */
+@media (min-width: 700px) {
+  input,
+  button {
+    width: 50%;
+  }
+}

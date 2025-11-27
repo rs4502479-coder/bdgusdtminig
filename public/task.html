@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Hall — BDG USDT Mining</title>
+    <link rel="stylesheet" href="/assets/css/index.css" />
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>
+      /* small inline styles to keep file self-contained */
+      .card {
+        max-width: 680px;
+        margin: 20px auto;
+        border-radius: 0;
+        background: linear-gradient(#6514df, #7904da);
+        color: white;
+        padding: 0;
+        box-shadow: none;
+      }
+      header {
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .content {
+        padding: 22px;
+      }
+      .plan {
+        background: rgba(0, 0, 50, 0.45);
+        border-radius: 20px;
+        margin: 10px 0;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .plan-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .plan-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: #003f57;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+        color: white;
+      }
+      .plan-meta {
+        font-size: 12px;
+        color: #8bbcff;
+      }
+      .btn-buy {
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: #00b894;
+        color: #04293a;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-disabled {
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        border: none;
+      }
+      .small {
+        font-size: 0.9rem;
+        color: #ddd;
+        margin-top: 8px;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="card" role="main">
+      <header>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <div
+            class="logo"
+            style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background-image: url(/assets/images/ico.jpg);
+              background-size: cover;
+            "
+          ></div>
+          <div style="font-weight: bold; font-size: larger">
+            BDG USDT Mining
+          </div>
+        </div>
+        <div id="balWrap">Balance: <strong id="balanceText">--</strong></div>
+      </header>
+
+      <div class="content">
+        <button
+          class="btn btn-ghost"
+          style="margin: 16px 0; display: flex; align-items: center; gap: 16px"
+        >
+          <span
+            class="iconify"
+            data-icon="fluent:task-list-square-ltr-16-regular"
+            style="font-size: 40px; color: white"
+          ></span>
+          <span style="color: white; font-size: 30px">Task Hall</span>
+        </button>
+
+        <div id="plans"></div>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.25);
+            height: 80px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <p style="padding: 20px; text-align: center">
+            © 2025 BDG USDT Mining<br />All rights reserved
+          </p>
+        </div>
+        <div id="msg" class="small"></div>
+      </div>
+    </div>
+
+    <!-- bottom nav -->
+    <nav>
+      <a
+        href="/index.html"
+        style="text-align: center; color: white; text-decoration: none"
+      >
+        <span
+          class="iconify"
+          data-icon="mdi:home-outline"
+          style="font-size: 24px"
+        ></span>
+        <div style="font-size: 12px">Home</div>
+      </a>
+
+      <a
+        href="/task.html"
+        style="text-align: center; color: white; text-decoration: none"
+      >
+        <span
+          class="iconify"
+          data-icon="fluent:task-list-square-ltr-16-regular"
+          style="font-size: 24px"
+        ></span>
+        <div style="font-size: 12px">Task</div>
+      </a>
+
+      <a
+        href="/team.html"
+        style="text-align: center; color: white; text-decoration: none"
+      >
+        <span
+          class="iconify"
+          data-icon="mdi:account-group-outline"
+          style="font-size: 24px"
+        ></span>
+        <div style="font-size: 12px">Team</div>
+      </a>
+
+      <a
+        href="/vip.html"
+        style="text-align: center; color: white; text-decoration: none"
+      >
+        <span
+          class="iconify"
+          data-icon="mdi:crown-outline"
+          style="font-size: 24px"
+        ></span>
+        <div style="font-size: 12px">VIP</div>
+      </a>
+
+      <!-- Profile Link -->
+      <a
+        href="/dashboard.html"
+        id="accountLink"
+        class="account-link"
+        style="text-align: center; color: white; text-decoration: none"
+      >
+        <span
+          class="iconify"
+          data-icon="mdi:account-circle-outline"
+          style="font-size: 24px"
+        ></span>
+        <div style="font-size: 12px">Profile</div>
+      </a>
+    </nav>
+
+    <script>
+      // --- config: available tiers (must match your DB/plans)
+      const tiers = [
+        { amount: 25, name: "New Energy 1", daily_reward: 0.5 },
+        { amount: 100, name: "New Energy 2", daily_reward:2 },
+        { amount: 300, name: "New Energy 3", daily_reward: 6 },
+        { amount: 720, name: "New Energy 4", daily_reward: 14.40 },
+        { amount: 1750, name: "New Energy 5", daily_reward: 35 },
+        { amount: 4080, name: "New Energy 6", daily_reward: 81.60 },
+        { amount: 10000, name: "New Energy 7", daily_reward: 200 },
+        { amount: 25000, name: "New Energy 8", daily_reward: 500 },
+        { amount: 65000, name: "New Energy 9", daily_reward: 1300 },
+        { amount: 115000, name: "New Energy 10", daily_reward: 2300 },
+      ];
+
+      // helper: get Bearer token header object
+      function authHeaders() {
+        const token = localStorage.getItem("token");
+        return token
+          ? {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            }
+          : null;
+      }
+
+      // show temporary message
+      function showMsg(txt, error = false) {
+        const m = document.getElementById("msg");
+        m.innerText = txt;
+        m.style.color = error ? "#ffb3b3" : "#cfe9d8";
+        setTimeout(() => {
+          if (m.innerText === txt) m.innerText = "";
+        }, 4000);
+      }
+
+      // load real balance from backend
+      async function fetchBalance() {
+        const headers = authHeaders();
+        if (!headers) {
+          // redirect to login/signup
+          showMsg("Please login first.", true);
+          setTimeout(() => (window.location.href = "/signup.html"), 700);
+          throw new Error("No token");
+        }
+
+        const res = await fetch("/api/user/balance", { headers });
+        if (!res.ok) {
+          // try parse json message
+          let j;
+          try {
+            j = await res.json();
+          } catch (e) {}
+          throw new Error(
+            (j && (j.message || j.error)) || "Failed to load balance"
+          );
+        }
+        const data = await res.json();
+        if (!data.success)
+          throw new Error(data.message || "Failed to load balance");
+        return parseFloat(data.balance);
+      }
+
+      // render plans based on balance and user_tasks (we fetch purchased plan id to prevent multi buy)
+      async function loadPlans() {
+        try {
+          document.getElementById("balanceText").innerText = "Loading...";
+          const balance = await fetchBalance();
+          document.getElementById("balanceText").innerText =
+            balance.toFixed(2) + " USDT";
+
+          // optionally fetch existing purchase (so user can't buy multiple energies)
+          // endpoint: GET /api/tasks/my (not required). We'll check user_tasks table via /api/tasks/balance or add /api/tasks/status if you have it.
+          // For now assume single active plan per user: we'll call /api/tasks/status (if exists); if not, we continue.
+          let activePlanAmount = null;
+          // try optional status endpoint
+          try {
+            const headers = authHeaders();
+            const st = await fetch("/api/tasks/status", { headers });
+            if (st.ok) {
+              const js = await st.json();
+              if (js.success && js.activePlan)
+                activePlanAmount = parseFloat(js.activePlan.amount);
+            }
+          } catch (_) {
+            /* ignore */
+          }
+
+          const container = document.getElementById("plans");
+          container.innerHTML = "";
+
+          tiers.forEach((tier) => {
+            const unlocked = balance >= tier.amount;
+            const alreadyBought = activePlanAmount === tier.amount;
+
+            const card = document.createElement("div");
+            card.className = "plan";
+
+            // left side info
+            const info = document.createElement("div");
+            info.className = "plan-info";
+            info.innerHTML = `
+            <div class="plan-box">T</div>
+            <div>
+              <div class="plan-meta">Unlock amount $${tier.amount.toLocaleString()}</div>
+              <div style="font-size:14px;color:white">${tier.name}</div>
+              <div style="font-size:12px;color:#ddd;margin-top:6px">Daily reward: ${
+                tier.daily_reward
+              } USDT</div>
+            </div>
+          `;
+
+            // right side: action
+            const action = document.createElement("div");
+            if (alreadyBought) {
+              action.innerHTML = `<div style="text-align:right"><div style="font-weight:700">ACTIVE</div><div style="font-size:12px;color:#bde0a8">You already bought this</div></div>`;
+            } else if (!unlocked) {
+              action.innerHTML = `<div style="text-align:right"><button class="btn-disabled">Locked</button></div>`;
+            } else {
+              const btn = document.createElement("button");
+              btn.className = "btn-buy";
+              btn.innerText = `Buy $${tier.amount}`;
+              btn.onclick = () => buyPlan(tier.amount, btn);
+              action.appendChild(btn);
+            }
+
+            card.appendChild(info);
+            card.appendChild(action);
+            container.appendChild(card);
+          });
+        } catch (err) {
+          console.error("loadPlans error:", err);
+          showMsg(err.message || "Failed to load balance", true);
+          document.getElementById("balanceText").innerText = "--";
+        }
+      }
+
+      // buy plan (calls backend POST /api/tasks/buy { amount })
+      async function buyPlan(amount, btn) {
+        if (
+          !confirm(
+            `Buy this energy for $${amount}? This will deduct from your wallet.`
+          )
+        )
+          return;
+
+        const headers = authHeaders();
+        if (!headers) {
+          showMsg("Login required", true);
+          return;
+        }
+
+        try {
+          btn.disabled = true;
+          btn.innerText = "Processing...";
+
+          const res = await fetch("/api/tasks/buy", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ amount }),
+          });
+
+          const json = await res.json().catch(() => null);
+
+          if (!res.ok) {
+            const msg =
+              (json && (json.message || json.error)) ||
+              `Failed to buy (${res.status})`;
+            showMsg(msg, true);
+            btn.disabled = false;
+            btn.innerText = `Buy $${amount}`;
+            return;
+          }
+
+          if (!json || !json.success) {
+            showMsg(
+              (json && (json.message || json.error)) || "Buy failed",
+              true
+            );
+            btn.disabled = false;
+            btn.innerText = `Buy $${amount}`;
+            return;
+          }
+
+          showMsg("Plan purchased successfully ✅");
+          // refresh UI & balance
+          await loadPlans();
+        } catch (err) {
+          console.error("buyPlan error:", err);
+          showMsg("Server error during purchase", true);
+          btn.disabled = false;
+          btn.innerText = `Buy $${amount}`;
+        }
+      }
+
+      // accountLink behaviour
+      document.getElementById("accountLink").addEventListener("click", (e) => {
+        const token = localStorage.getItem("token");
+        window.location.href = token ? "/dashboard.html" : "/signup.html";
+      });
+
+      // initial load
+      document.addEventListener("DOMContentLoaded", loadPlans);
+    </script>
+  </body>
+</html>

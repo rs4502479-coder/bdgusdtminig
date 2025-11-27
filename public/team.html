@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BDG USDT Mining - Team</title>
+  <link rel="stylesheet" href="/assets/css/index.css" />
+
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(#6514df 10%, #7904da 60%);
+      color: white;
+      margin: 0;
+      font-family: "Inter", sans-serif;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 16px;
+    }
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .level-card {
+      background: rgba(0,0,0,0.25);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+    }
+    .level-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .commission {
+      font-size: 13px;
+      color: #e5e5ff;
+    }
+    .stat {
+      background: rgba(255,255,255,0.08);
+      padding: 6px;
+      border-radius: 8px;
+      margin: 6px 0;
+      font-size: 13px;
+    }
+    .details-btn {
+      padding: 6px 12px;
+      background: #ffd54f;
+      color: black;
+      border-radius: 10px;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+    .team-summary {
+      background: rgba(0,0,0,0.3);
+      border-radius: 20px;
+      padding: 16px;
+      margin-top: 24px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+    .summary-item {
+      background: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .summary-item strong {
+      font-size: 19px;
+      display: block;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div style="display: flex; align-items: center; gap: 8px">
+        <div class="logo" style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background-image: url(/assets/images/ico.jpg);
+            "></div>
+        <div style="font-weight: bold; font-size: larger" data-key="title">
+          BDG USDT Mining
+        </div>
+      </div>
+    <h2 style="text-align:center;">Team Overview</h2>
+
+    <!-- Levels -->
+    <div id="levels" class="level-grid"></div>
+
+    <div class="team-summary">
+      <h3 style="text-align:center;">Team Summary</h3>
+      <div id="teamSummary" class="summary-grid"></div>
+    </div>
+
+    <!-- TEAM RECHARGE PLANS -->
+<style>
+.plan-box {
+  background: rgba(255,255,255,0.1);
+  padding: 14px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+.plan-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.plan-amt {
+  color: #ffd54f;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+.buy-btn {
+  background: #ffd54f;
+  color: #000;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: bold;
+  text-align: center;
+  margin-left: 70%;
+  margin-top: 8px;
+  display: inline-block;
+}
+</style>
+
+<div class="team-summary">
+  <h3 style="text-align:center;">Team Recharge Plans</h3>
+  <div id="rechargePlans"></div>
+</div>
+
+<div class="team-summary">
+  <h3 style="text-align:center;">Daily Team Task</h3>
+
+  <div style="
+    background: rgba(255,255,255,0.1);
+    padding: 16px;
+    border-radius: 14px;
+    text-align: center;
+  ">
+    <p style="font-size: 16px; margin: 10px 0;">
+      Complete your daily team task & earn <b>$10</b>
+    </p>
+
+    <button id="claimBtn" onclick="claimTask()" 
+      style="background:#ffd54f;color:black;padding:10px 24px;border:none;
+      border-radius:12px;font-size:16px;font-weight:bold;">
+      Claim Task
+    </button>
+  </div>
+</div>
+<script>
+async function claimTask() {
+  const token = localStorage.getItem("token");
+  if (!token) return alert("Login First");
+
+  const btn = document.getElementById("claimBtn");
+  btn.disabled = true;
+  btn.innerText = "Processing...";
+
+  const res = await fetch("/api/user/claim-task", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    }
+  });
+
+  const data = await res.json();
+  alert(data.message);
+
+  if (data.success) {
+    btn.innerText = "Task Completed";
+    btn.style.background = "gray";
+  } else {
+    btn.disabled = false;
+    btn.innerText = "Claim Task";
+  }
+}
+</script>
+
+  </div>
+
+
+  <script>
+const rechargePlans = [
+    { amount: 100,  name: "New Energy 1" },
+    { amount: 300,  name: "New Energy 2" },
+    { amount: 720,  name: "New Energy 3" },
+    { amount: 1750, name: "New Energy 4" },
+    { amount: 4080, name: "New Energy 5" },
+    { amount: 10000, name: "New Energy 6" },
+    { amount: 25000, name: "New Energy 7" },
+    { amount: 65000, name: "New Energy 8" },
+    { amount: 115000, name: "New Energy 9" }
+];
+
+function loadRechargePlans() {
+  document.getElementById("rechargePlans").innerHTML = rechargePlans.map(p => `
+     <div class="plan-box">
+        <div class="plan-title">${p.name}</div>
+        <div class="plan-amt">$${p.amount}</div>
+        <div class="buy-btn" onclick="buyRecharge(${p.amount})">Purchase</div>
+     </div>
+  `).join("");
+}
+
+async function buyRecharge(amount) {
+  const token = localStorage.getItem("token");
+  if (!token) return alert("Login First");
+
+  const res = await fetch("/api/user/buy-recharge", {
+    method: "POST",
+    headers: {
+       "Content-Type": "application/json",
+       Authorization: "Bearer " + token
+    },
+    body: JSON.stringify({ amount })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+}
+
+loadRechargePlans();
+</script>
+
+
+  <!-- ================= TEAM DATA SCRIPT ================= -->
+  <script>
+    async function loadTeamData() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return (window.location.href = "/signup.html");
+      }
+
+      try {
+        const res = await fetch("/api/user/team", {
+          headers: { Authorization: "Bearer " + token }
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          alert("Team data not available");
+          return;
+        }
+
+        // ---- Levels ----
+        const levels = data.levels || [];
+        document.getElementById("levels").innerHTML = levels
+          .map(l => `
+            <div class="level-card">
+              <div class="level-title">LEVEL ${l.level}</div>
+              <div class="commission">Commission ${l.commission}%</div>
+              <div class="stat">Register/Valid: ${l.register}/${l.valid}</div>
+              <div class="stat">Total Income: $${l.income}</div>
+              <a class="details-btn" href="/team-details.html?level=${l.level}">Details</a>
+            </div>
+          `)
+          .join("");
+
+        // ---- Summary ----
+        const s = data.summary || {
+          team_size: 0,
+          team_recharge: 0,
+          team_withdraw: 0,
+          new_team: 0,
+          first_recharge: 0,
+          first_withdraw: 0
+        };
+
+        document.getElementById("teamSummary").innerHTML = `
+          <div class="summary-item"><span>Team Size</span><strong>${s.team_size}</strong></div>
+          <div class="summary-item"><span>Team Recharge</span><strong>$${s.team_recharge}</strong></div>
+          <div class="summary-item"><span>Team Withdraw</span><strong>$${s.team_withdraw}</strong></div>
+          <div class="summary-item"><span>New Team</span><strong>${s.new_team}</strong></div>
+          <div class="summary-item"><span>First Recharge</span><strong>${s.first_recharge}</strong></div>
+          <div class="summary-item"><span>First Withdraw</span><strong>${s.first_withdraw}</strong></div>
+        `;
+      } catch (err) {
+        console.error(err);
+        alert("Server Error");
+      }
+    }
+
+    loadTeamData();
+  </script>
+<nav>
+    <a href="/index.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Home</div>
+    </a>
+
+    <a href="/task.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Task</div>
+    </a>
+
+    <a href="/team.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Team</div>
+    </a>
+
+    <a href="/vip.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">VIP</div>
+    </a>
+
+    <!-- Profile Link -->
+    <a href="/dashboard.html" id="accountLink" class="account-link" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Profile</div>
+    </a>
+
+  </nav>
+</body>
+</html>

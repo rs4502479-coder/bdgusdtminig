@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invite - BDG USDT Mining</title>
+  <link rel="stylesheet" href="/assets/css/index.css" />
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+</head>
+
+<body>
+  <div class="card" style="max-width:680px;border-radius:0;background:linear-gradient(#6514df,#7904da)">
+    <header style="padding:16px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="logo" 
+          style="width:40px;height:40px;border-radius:50%;background-image:url(images/ico.jpg);background-size:cover;">
+        </div>
+        <div style="font-weight:bold;font-size:larger;color:white;">Invite Friends</div>
+      </div>
+    </header>
+
+    <div style="padding:12px;text-align:center;color:white;">
+      <p>Your Invite Code:</p>
+      <h2 id="inviteCode" style="margin:5px 0;">•••••</h2>
+
+      <button 
+        class="btn btn-primary" 
+        id="copyInvite" 
+        style="padding:10px 14px;border-radius:10px;background:white;color:black;border:none;font-weight:bold;">
+        Copy Invite Link
+      </button>
+    </div>
+  </div>
+
+  <script>
+    async function loadInviteCode() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "/signup.html";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/user/profile", {
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const code = data.user.invite_code;
+          const fullLink = `https://bdgmining.com/signup.html?ref=${code}`;
+
+          document.getElementById("inviteCode").textContent = code;
+
+          document.getElementById("copyInvite").onclick = () => {
+            navigator.clipboard.writeText(fullLink);
+            alert("Invite link copied!");
+          };
+        } else {
+          alert("Error loading invite code.");
+        }
+
+      } catch (err) {
+        console.error("Error:", err);
+        alert("Failed to load invite details.");
+      }
+    }
+
+    loadInviteCode();
+  </script>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav>
+    <a href="/index.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:home-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Home</div>
+    </a>
+
+    <a href="/task.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="fluent:task-list-square-ltr-16-regular" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Task</div>
+    </a>
+
+    <a href="/team.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-group-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Team</div>
+    </a>
+
+    <a href="/vip.html" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:crown-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">VIP</div>
+    </a>
+
+    <a href="#" id="accountLink" class="account-link" style="text-align: center; color: white; text-decoration: none;">
+      <span class="iconify" data-icon="mdi:account-circle-outline" style="font-size: 24px;"></span>
+      <div style="font-size: 12px;">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const accountLink = document.getElementById("accountLink");
+
+      accountLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        if (token) window.location.href = "profile.html";
+        else window.location.href = "signup.html";
+      });
+    });
+  </script>
+
+</body>
+</html>
